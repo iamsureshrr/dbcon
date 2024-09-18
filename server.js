@@ -1,8 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const cors = require("cors");
+
 const path = require("path");
+const cors = require('cors');
 
 const app = express();
 const port = 5000;
@@ -58,3 +59,11 @@ app.get('*', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
+
+
+app.use(cors({
+    origin: "https://iamsureshrr.github.io", // Allow requests from your GitHub Pages URL
+    methods: ['GET', 'POST'], // Specify the allowed methods
+}));
+
