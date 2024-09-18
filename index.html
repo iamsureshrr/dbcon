@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Submission</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      color: #555;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    .popup {
+      display: none;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+    }
+
+    .popup.active {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Submit Your Details</h1>
+    <form id="myForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="contactNumber">Contact Number:</label>
+      <input type="text" id="contactNumber" name="contactNumber" required />
+
+      <label for="location">Location:</label>
+      <input type="text" id="location" name="location" required />
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <!-- Confirmation Popup -->
+  <div id="popup" class="popup">
+    Thank you, <span id="popupName"></span>!
+  </div>
+
+  <script>
+    document.getElementById("myForm").addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const contactNumber = document.getElementById("contactNumber").value;
+      const location = document.getElementById("location").value;
+
+      const data = { name, contactNumber, location };
+
+      try {
+        const response = await fetch("http://localhost:5000/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+          document.getElementById("popupName").innerText = name;
+          document.getElementById("popup").classList.add("active");
+          setTimeout(() => {
+            document.getElementById("popup").classList.remove("active");
+          }, 3000);
+          document.getElementById("myForm").reset();
+        } else {
+          alert("Error submitting the form. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error submitting the form:", error);
+      }
+    });
+  </script>
+</body>
+</html>
